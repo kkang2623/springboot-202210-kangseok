@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.springboot202210kangseok.repository.UserRepository">
+<!-- 매퍼를 통해 인터페이스와 연결 -->
+    <insert id="saveUser" parameterType="com.study.springboot202210kangseok.web.dto.UserDto"
+    useGeneratedKeys="true" keyProperty="userId">
+<!--     자동으로 오토임그리먼츠 값을  갖겠다.
+        saveUser를 int로 잡아준 이유는 리턴 셀렉트는 성공횟수-->
+        insert into user_mst
+        values
+        (0, #{username}, #{password}, #{name}, #{email})
+    </insert>
+
+    <select id="findUserByUserId" parameterType="integer" resultType="com.study.springboot202210kangseok.web.dto.UserDto">
+        select
+            user_id as userId,
+            username,
+            password,
+            name,
+            email
+        from
+            user_mst
+        where
+            user_id = #{userId}
+    </select>
+
+
+</mapper>
