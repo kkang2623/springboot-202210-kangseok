@@ -10,25 +10,19 @@
 
 <body>
     <script>
-        // function test() {
-        //     alert("테스트 호출!!!")
-        // }
-        // test();
+      const user = {
+        username : "kkang",
+        password : "1234",
+        name : "남강석",
+        email : "kkang2623@naver.com"
+      }
+      console.log(Object.keys(user)[0]);
+      console.log(user[Object.keys(user)[0]]);
 
-        // const test = function () {
-        //     alert("테스트 호출!!")
-        // }
-
-
-        const test = () => {
-            alert("테스트 호출!!")
-        }
-
-        const abc = test;
-
-        test();
-
-        abc();
+      Object.keys(user).forEach(key =>{
+        console.log(key);
+        console.log(user[key]);
+      })
     </script>
 </body>
 
