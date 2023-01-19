@@ -12,44 +12,46 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+
+
 @Aspect
 @Component
 public class ValidationAop {
-
-    @Pointcut("execution(* com.study.springboot202210kangseok.web.controller.account.AccountApiController.*(..))")
-    private void executionPointCut() {
-
-    }
+    @Pointcut("execution(* com.study.springboot202210junil.web.controller.account.AccountApiController.*(..))")
+    private void executionPointCut() {}
 
     @Around("executionPointCut()")
+    @Pointcut("@annotation(com.study.springboot202210junil.aop.annotation.ValidAspect)")
+    private void annotationPointCut() {}
+
+    @Around("annotationPointCut()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs();
+        for(Object arg : args) {
+            System.out.println(arg);
+        }
 
         System.out.println("AOP 작동함!!");
 
         BeanPropertyBindingResult bindingResult = null;
-
-        for (Object arg : args) {
-            if(arg.getClass() == BeanPropertyBindingResult.class){
+        for(Object arg : args) {
+            if(arg.getClass() == BeanPropertyBindingResult.class) {
                 bindingResult = (BeanPropertyBindingResult) arg;
                 break;
             }
         }
-
-        if (bindingResult != null) {
-            Map<String, String> errorMap = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(error -> {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            });
-
-            throw new CustomValidException(errorMap);
+        if(bindingResult != null) {
+            if(bindingResult.hasErrors()) {
+                Map<String, String> errorMap = new HashMap<>();
+                bindingResult.getFieldErrors().forEach(error -> {
+                    errorMap.put(error.getField(), error.getDefaultMessage());
+                });
+                throw new CustomValidException(errorMap);
+            }
         }
-
-        //메소드 호출 전 처리
-        Object returnValue = proceedingJoinPoint.proceed(); // proceed 비즈니스 로직 // 내가 지정한 메소드
+        // 메소드 호출 전 처리
+        Object returnValue = proceedingJoinPoint.proceed();
         // 메소드 호출 후 처리
         return returnValue;
     }
-
-
 }
